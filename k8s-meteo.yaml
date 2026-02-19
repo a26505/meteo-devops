@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meteo-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: meteo
+  template:
+    metadata:
+      labels:
+        app: meteo
+    spec:
+      containers:
+      - name: meteo-container
+        image: tu-usuario-dockerhub/meteo-devops:latest # Pon tu imagen de DockerHub
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meteo-service
+spec:
+  type: LoadBalancer # <--- ESTO hará que aparezca el Load Balancer en AWS
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: meteo
